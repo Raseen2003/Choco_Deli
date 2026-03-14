@@ -1,6 +1,10 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import axios from 'axios';
 
+// 1. SET YOUR LIVE BACKEND URL HERE
+// Replace this with the URL you see at the top of your Render dashboard
+axios.defaults.baseURL = 'https://choco-deli-server.onrender.com'; 
+
 const AuthContext = createContext();
 
 export const useAuth = () => useContext(AuthContext);
@@ -10,12 +14,10 @@ export const AuthProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Check local storage for user token on load
     const userInfo = localStorage.getItem('userInfo');
     if (userInfo) {
       const parsedUser = JSON.parse(userInfo);
       setUser(parsedUser);
-      // Set default auth header for axios
       axios.defaults.headers.common['Authorization'] = `Bearer ${parsedUser.token}`;
     }
     setLoading(false);
@@ -23,7 +25,9 @@ export const AuthProvider = ({ children }) => {
 
   const login = async (email, password) => {
     try {
-      const { data } = await axios.post('http://localhost:5000/api/auth/login', { email, password });
+      // 2. REMOVE THE LOCALHOST PART - Axios will now use the baseURL above
+      const { data } = await axios.post('/api/auth/login', { email, password });
+      
       setUser(data);
       localStorage.setItem('userInfo', JSON.stringify(data));
       axios.defaults.headers.common['Authorization'] = `Bearer ${data.token}`;
@@ -41,7 +45,7 @@ export const AuthProvider = ({ children }) => {
 
   return (
     <AuthContext.Provider value={{ user, login, logout, loading }}>
-      {children}
+      {!loading && children}
     </AuthContext.Provider>
   );
 };
