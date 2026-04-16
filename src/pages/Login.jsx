@@ -4,11 +4,12 @@ import { useAuth } from '../context/AuthContext';
 import { Lock, Loader2, KeyRound } from 'lucide-react';
 
 const Login = () => {
+  const [isRegister, setIsRegister] = useState(false);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const { login, user, loading } = useAuth();
+  const { login, register, user, loading } = useAuth();
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -25,7 +26,11 @@ const Login = () => {
     setError('');
     
     try {
-      await login(email, password);
+      if (isRegister) {
+        await register(email, password);
+      } else {
+        await login(email, password);
+      }
     } catch (err) {
       setError(err);
     } finally {
@@ -43,8 +48,12 @@ const Login = () => {
           <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-chocolate-100 text-chocolate-600 mb-4">
             <KeyRound className="w-8 h-8" />
           </div>
-          <h2 className="text-3xl font-serif font-bold text-chocolate-950">Admin Log In</h2>
-          <p className="text-chocolate-600 mt-2">Access the ChocoDelight dashboard</p>
+          <h2 className="text-3xl font-serif font-bold text-chocolate-950">
+            {isRegister ? 'Create Account' : 'Welcome Back'}
+          </h2>
+          <p className="text-chocolate-600 mt-2">
+            {isRegister ? 'Join ChocoDelight today' : 'Sign in to your ChocoDelight account'}
+          </p>
         </div>
 
         {error && (
@@ -82,12 +91,22 @@ const Login = () => {
             className="btn-primary w-full py-3.5 text-lg flex justify-center items-center gap-2"
           >
             {isSubmitting ? (
-              <><Loader2 className="w-5 h-5 animate-spin" /> Authenticating...</>
+              <><Loader2 className="w-5 h-5 animate-spin" /> {isRegister ? 'Creating...' : 'Authenticating...'}</>
             ) : (
-              <><Lock className="w-5 h-5" /> Sign In</>
+              <><Lock className="w-5 h-5" /> {isRegister ? 'Register' : 'Sign In'}</>
             )}
           </button>
         </form>
+
+        <div className="mt-6 text-center">
+          <button 
+            type="button" 
+            onClick={() => { setIsRegister(!isRegister); setError(''); }}
+            className="text-chocolate-600 hover:text-chocolate-800 text-sm font-medium underline transition-colors"
+          >
+            {isRegister ? 'Already have an account? Sign In' : "Don't have an account? Register"}
+          </button>
+        </div>
 
       </div>
     </div>

@@ -5,7 +5,7 @@ import { useAuth } from '../context/AuthContext';
 
 const Navbar = ({ cartItemCount, onCartClick }) => {
   const location = useLocation();
-  const { user } = useAuth();
+  const { user, logout } = useAuth();
 
   const isActive = (path) => {
     return location.pathname === path ? 'text-chocolate-800 font-semibold' : 'text-chocolate-600 hover:text-chocolate-800 transition-colors';
@@ -20,23 +20,30 @@ const Navbar = ({ cartItemCount, onCartClick }) => {
         </Link>
         <div className="flex items-center gap-6">
           <Link to="/" className={`${isActive('/')}`}>Shop</Link>
-          {user && user.role === 'admin' ? (
-            <Link to="/admin" className={`flex items-center gap-1 ${isActive('/admin')}`}>
-              <ShieldCheck className="w-4 h-4" /> Dashboard
-            </Link>
+          {user ? (
+            <div className="flex items-center gap-4">
+              {user.role === 'admin' && (
+                <Link to="/admin" className={`flex items-center gap-1 ${isActive('/admin')}`}>
+                  <ShieldCheck className="w-4 h-4" /> Dashboard
+                </Link>
+              )}
+              <button onClick={logout} className="text-sm font-medium text-red-600 hover:text-red-800 transition-colors">
+                Logout
+              </button>
+            </div>
           ) : (
-            <Link to="/login" className={`flex items-center gap-1 text-sm text-chocolate-400 hover:text-chocolate-600 transition-colors`}>
-               {/* Admin Login */}
+            <Link to="/login" className={`font-semibold text-chocolate-700 hover:text-chocolate-900 transition-colors`}>
+              Sign In
             </Link>
           )}
-          <Link to="/checkout" className="relative group p-2 hover:bg-chocolate-50 rounded-full transition-colors cursor-pointer" onClick={onCartClick}>
+          <button className="relative group p-2 hover:bg-chocolate-50 rounded-full transition-colors cursor-pointer" onClick={onCartClick}>
             <ShoppingCart className="w-6 h-6 text-chocolate-700 group-hover:text-chocolate-900" />
             {cartItemCount > 0 && (
               <span className="absolute top-0 right-0 inline-flex items-center justify-center w-5 h-5 text-xs font-bold text-white bg-chocolate-600 border-2 border-white rounded-full -top-1 -right-1">
                 {cartItemCount}
               </span>
             )}
-          </Link>
+          </button>
         </div>
       </div>
     </nav>

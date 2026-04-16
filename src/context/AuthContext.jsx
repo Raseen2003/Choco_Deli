@@ -1,9 +1,9 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import axios from 'axios';
 
-// 1. SET YOUR LIVE BACKEND URL HERE
-// Replace this with the URL you see at the top of your Render dashboard
-axios.defaults.baseURL = 'https://choco-deli-server.onrender.com'; 
+// 1. SET YOUR LOCAL BACKEND URL HERE
+// Replace this with the URL you see at the top of your Render dashboard in production
+axios.defaults.baseURL = 'http://localhost:5000'; 
 
 const AuthContext = createContext();
 
@@ -37,6 +37,19 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
+  const register = async (email, password) => {
+    try {
+      const { data } = await axios.post('/api/auth/register', { email, password });
+      
+      setUser(data);
+      localStorage.setItem('userInfo', JSON.stringify(data));
+      axios.defaults.headers.common['Authorization'] = `Bearer ${data.token}`;
+      return data;
+    } catch (error) {
+      throw error.response?.data?.error || 'Registration failed';
+    }
+  };
+
   const logout = () => {
     setUser(null);
     localStorage.removeItem('userInfo');
@@ -44,7 +57,7 @@ export const AuthProvider = ({ children }) => {
   };
 
   return (
-    <AuthContext.Provider value={{ user, login, logout, loading }}>
+    <AuthContext.Provider value={{ user, login, register, logout, loading }}>
       {!loading && children}
     </AuthContext.Provider>
   );

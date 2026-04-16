@@ -5,7 +5,7 @@ import { Loader2 } from 'lucide-react';
 
 const API_URL = 'http://localhost:5000/api';
 
-const Shop = ({ addToCart }) => {
+const Shop = ({ addToCart, cart }) => {
   const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -72,14 +72,17 @@ const Shop = ({ addToCart }) => {
       )}
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 lg:gap-8">
-        {displayItems.map(item => (
-          <ItemCard 
-            key={item._id} 
-            item={item} 
-            onAddToCart={addToCart} 
-            inCartQuantity={0} // To be connected via complete cart state if needed per-item
-          />
-        ))}
+        {displayItems.map(item => {
+          const cartItem = cart?.find(c => c.item._id === item._id);
+          return (
+            <ItemCard 
+              key={item._id} 
+              item={item} 
+              onAddToCart={addToCart} 
+              inCartQuantity={cartItem ? cartItem.quantity : 0} 
+            />
+          );
+        })}
       </div>
     </div>
   );

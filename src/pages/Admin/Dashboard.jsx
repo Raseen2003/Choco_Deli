@@ -14,9 +14,9 @@ const Dashboard = ({ initialTab = 'orders' }) => {
     name: '',
     description: '',
     price: '',
-    amount: '',
-    imageUrl: ''
+    amount: ''
   });
+  const [imageFile, setImageFile] = useState(null);
   const [addingItem, setAddingItem] = useState(false);
   const [successMsg, setSuccessMsg] = useState('');
 
@@ -78,13 +78,23 @@ const Dashboard = ({ initialTab = 'orders' }) => {
     e.preventDefault();
     setAddingItem(true);
     try {
-      await axios.post(`${API_URL}/items`, {
-        ...newItem,
-        price: parseFloat(newItem.price),
-        amount: parseInt(newItem.amount)
+      const formData = new FormData();
+      formData.append('name', newItem.name);
+      formData.append('description', newItem.description);
+      formData.append('price', parseFloat(newItem.price));
+      formData.append('amount', parseInt(newItem.amount));
+      if (imageFile) {
+        formData.append('image', imageFile);
+      }
+
+      await axios.post(`${API_URL}/items`, formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        }
       });
       setSuccessMsg('Item added successfully!');
-      setNewItem({ name: '', description: '', price: '', amount: '', imageUrl: '' });
+      setNewItem({ name: '', description: '', price: '', amount: '' });
+      setImageFile(null);
       if (initialTab === 'inventory') fetchItems();
       setTimeout(() => setSuccessMsg(''), 3000);
     } catch (err) {
@@ -109,10 +119,19 @@ const Dashboard = ({ initialTab = 'orders' }) => {
   const handeSubmitEditItem = async (e) => {
     e.preventDefault();
     try {
-      await axios.patch(`${API_URL}/items/${editingItem._id}`, {
-        ...editingItem,
-        price: parseFloat(editingItem.price),
-        amount: parseInt(editingItem.amount)
+      const formData = new FormData();
+      formData.append('name', editingItem.name);
+      formData.append('description', editingItem.description);
+      formData.append('price', parseFloat(editingItem.price));
+      formData.append('amount', parseInt(editingItem.amount));
+      if (editingItem.imageFile) {
+        formData.append('image', editingItem.imageFile);
+      }
+
+      await axios.patch(`${API_URL}/items/${editingItem._id}`, formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        }
       });
       setSuccessMsg('Item updated successfully!');
       setEditingItem(null);
@@ -239,7 +258,7 @@ const Dashboard = ({ initialTab = 'orders' }) => {
                     <tr key={item._id} className="hover:bg-chocolate-50/50 transition-colors">
                       <td className="p-4">
                         <div className="flex items-center gap-3">
-                          <img src={item.imageUrl} alt={item.name} className="w-12 h-12 object-cover rounded-md border border-chocolate-100" />
+                          <img src={item.imageUrl?.startsWith('/') ? `http://localhost:5000${item.imageUrl}` : item.imageUrl} alt={item.name} className="w-12 h-12 object-cover rounded-md border border-chocolate-100" />
                           <div>
                             <div className="font-medium text-chocolate-900">{item.name}</div>
                             <div className="text-xs text-chocolate-500 truncate max-w-xs">{item.description}</div>
@@ -298,8 +317,12 @@ const Dashboard = ({ initialTab = 'orders' }) => {
                     </div>
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-chocolate-800 mb-1">Image URL</label>
-                    <input type="url" required className="input-field" value={editingItem.imageUrl} onChange={e => setEditingItem({...editingItem, imageUrl: e.target.value})} />
+                    <label className="block text-sm font-medium text-chocolate-800 mb-1">Product Image (Leave empty to keep current)</label>
+                    <input type="file" accept="image/*" className="input-field" onChange={e => {
+                      if(e.target.files[0]) {
+                        setEditingItem({...editingItem, imageFile: e.target.files[0]});
+                      }
+                    }} />
                   </div>
                   <div className="flex gap-3 justify-end mt-6">
                     <button type="button" onClick={() => setEditingItem(null)} className="px-4 py-2 border border-chocolate-200 text-chocolate-700 rounded-lg hover:bg-chocolate-50">Cancel</button>
@@ -347,10 +370,9 @@ const Dashboard = ({ initialTab = 'orders' }) => {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-chocolate-800 mb-1">Image URL</label>
-              <input type="url" required className="input-field" placeholder="https://images.unsplash.com/..."
-                value={newItem.imageUrl} onChange={e => setNewItem({...newItem, imageUrl: e.target.value})} />
-              <p className="text-xs text-chocolate-500 flex items-center gap-1 mt-1">Hint: Use an Unsplash link for beautiful photos.</p>
+              <label className="block text-sm font-medium text-chocolate-800 mb-1">Product Image</label>
+              <input type="file" accept="image/*" required className="input-field"
+                onChange={e => setImageFile(e.target.files[0])} />
             </div>
 
             <button type="submit" disabled={addingItem} className="btn-primary w-full flex justify-center items-center py-3 text-lg font-medium mt-4">

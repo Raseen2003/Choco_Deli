@@ -9,7 +9,7 @@ const ItemCard = ({ item, onAddToCart, inCartQuantity }) => {
     <div className="card group flex flex-col h-full bg-white relative overflow-hidden transition-all duration-500 hover:-translate-y-1 hover:shadow-lg">
       <div className="relative aspect-[4/3] w-full overflow-hidden bg-chocolate-100">
         <img 
-          src={item.imageUrl || "https://images.unsplash.com/photo-1549007994-cb92caebd54b?auto=format&fit=crop&q=80&w=400&h=300"} 
+          src={item.imageUrl?.startsWith('/') ? `http://localhost:5000${item.imageUrl}` : (item.imageUrl || "https://images.unsplash.com/photo-1549007994-cb92caebd54b?auto=format&fit=crop&q=80&w=400&h=300")} 
           alt={item.name} 
           className="object-cover w-full h-full group-hover:scale-105 transition-transform duration-700 ease-in-out"
         />

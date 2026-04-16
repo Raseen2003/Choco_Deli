@@ -105,7 +105,7 @@ const Checkout = ({ cart, updateCartQuantity, clearCart }) => {
             {cart.map((c) => (
               <div key={c.item._id} className="flex gap-4">
                 <div className="w-16 h-16 rounded overflow-hidden flex-shrink-0 bg-chocolate-100 border border-chocolate-100">
-                  <img src={c.item.imageUrl} alt={c.item.name} className="w-full h-full object-cover" />
+                  <img src={c.item.imageUrl?.startsWith('/') ? `http://localhost:5000${c.item.imageUrl}` : c.item.imageUrl} alt={c.item.name} className="w-full h-full object-cover" />
                 </div>
                 <div className="flex-grow">
                   <h4 className="font-medium text-chocolate-900 line-clamp-1">{c.item.name}</h4>
