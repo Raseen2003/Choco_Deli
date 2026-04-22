@@ -33,7 +33,7 @@ const AdminLayout = () => {
       <aside className={`fixed lg:static inset-y-0 left-0 z-50 w-64 bg-chocolate-950 text-white flex flex-col shrink-0 transform transition-transform duration-300 ease-in-out ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}`}>
         <div className="p-6 border-b border-chocolate-800 flex justify-between items-center">
           <div>
-            <Link to="/" className="flex items-center gap-2 text-white" onClick={() => setIsSidebarOpen(false)}>
+            <Link to="/shop" className="flex items-center gap-2 text-white" onClick={() => setIsSidebarOpen(false)}>
               <Coffee className="w-8 h-8 text-chocolate-400" />
               <span className="font-serif text-2xl font-bold italic tracking-tight">ChocoDelight</span>
             </Link>

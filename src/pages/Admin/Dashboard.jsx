@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { PackageOpen, PlusCircle, CheckCircle, Package, List, Edit, Trash2, X } from 'lucide-react';
 
-const API_URL = 'http://localhost:5000/api';
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
 
 const Dashboard = ({ initialTab = 'orders' }) => {
   const [activeTab, setActiveTab] = useState(initialTab); // 'orders' or 'add-item'
@@ -258,7 +258,7 @@ const Dashboard = ({ initialTab = 'orders' }) => {
                     <tr key={item._id} className="hover:bg-chocolate-50/50 transition-colors">
                       <td className="p-4">
                         <div className="flex items-center gap-3">
-                          <img src={item.imageUrl?.startsWith('/') ? `http://localhost:5000${item.imageUrl}` : item.imageUrl} alt={item.name} className="w-12 h-12 object-cover rounded-md border border-chocolate-100" />
+                          <img src={item.imageUrl?.startsWith('/') ? `${import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000'}${item.imageUrl}` : item.imageUrl} alt={item.name} className="w-12 h-12 object-cover rounded-md border border-chocolate-100" />
                           <div>
                             <div className="font-medium text-chocolate-900">{item.name}</div>
                             <div className="text-xs text-chocolate-500 truncate max-w-xs">{item.description}</div>

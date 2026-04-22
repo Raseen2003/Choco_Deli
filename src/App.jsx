@@ -73,7 +73,7 @@ function App() {
               ) : (
                 cart.map(c => (
                   <div key={c.item._id} className="flex gap-4 items-center bg-white p-3 rounded-xl border border-chocolate-100 shadow-sm">
-                    <img src={c.item.imageUrl?.startsWith('/') ? `http://localhost:5000${c.item.imageUrl}` : c.item.imageUrl} alt={c.item.name} className="w-16 h-16 object-cover rounded-lg border border-chocolate-50" />
+                    <img src={c.item.imageUrl?.startsWith('/') ? `${import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000'}${c.item.imageUrl}` : c.item.imageUrl} alt={c.item.name} className="w-16 h-16 object-cover rounded-lg border border-chocolate-50" />
                     <div className="flex-grow">
                       <h3 className="font-bold text-chocolate-900 line-clamp-1">{c.item.name}</h3>
                       <p className="text-sm font-semibold text-chocolate-600">${c.price.toFixed(2)}</p>
@@ -112,7 +112,7 @@ function App() {
           {/* Protected General User Routes with standard Navbar */}
           <Route element={<ProtectedRoute adminOnly={false} />}>
             <Route element={<UserLayout />}>
-              <Route path="/" element={<Shop addToCart={addToCart} cart={cart} />} />
+              <Route path="/shop" element={<Shop addToCart={addToCart} cart={cart} />} />
               <Route 
                 path="/checkout" 
                 element={<Checkout cart={cart} updateCartQuantity={updateCartQuantity} clearCart={clearCart} />} 
@@ -121,7 +121,7 @@ function App() {
           </Route>
           
           {/* Standalone Login Route */}
-          <Route path="/login" element={<Login />} />
+          <Route path="/" element={<Login />} />
           
           {/* Protected Admin Routes with separate Admin Sidebar Layout */}
           <Route path="/admin" element={<ProtectedRoute adminOnly={true} />}>

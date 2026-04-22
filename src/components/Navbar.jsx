@@ -14,12 +14,12 @@ const Navbar = ({ cartItemCount, onCartClick }) => {
   return (
     <nav className="bg-white sticky top-0 z-50 shadow-sm border-b border-chocolate-100 py-4">
       <div className="container mx-auto px-4 flex justify-between items-center">
-        <Link to="/" className="flex items-center gap-2 text-chocolate-900 overflow-hidden">
+        <Link to="/shop" className="flex items-center gap-2 text-chocolate-900 overflow-hidden">
           <Coffee className="w-6 h-6 sm:w-8 sm:h-8 flex-shrink-0 text-chocolate-600" />
           <span className="font-serif text-xl sm:text-2xl font-bold italic tracking-tight truncate">ChocoDelight</span>
         </Link>
         <div className="flex items-center gap-6">
-          <Link to="/" className={`${isActive('/')}`}>Shop</Link>
+          <Link to="/shop" className={`${isActive('/shop')}`}>Shop</Link>
           {user ? (
             <div className="flex items-center gap-4">
               {user.role === 'admin' && (
@@ -32,7 +32,7 @@ const Navbar = ({ cartItemCount, onCartClick }) => {
               </button>
             </div>
           ) : (
-            <Link to="/login" className={`font-semibold text-chocolate-700 hover:text-chocolate-900 transition-colors`}>
+            <Link to="/" className={`font-semibold text-chocolate-700 hover:text-chocolate-900 transition-colors`}>
               Sign In
             </Link>
           )}

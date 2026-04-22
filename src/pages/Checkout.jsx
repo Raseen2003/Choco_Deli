@@ -3,7 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { ArrowLeft, Trash2, CreditCard, Loader2 } from 'lucide-react';
 import axios from 'axios';
 
-const API_URL = 'http://localhost:5000/api';
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
 
 const Checkout = ({ cart, updateCartQuantity, clearCart }) => {
   const navigate = useNavigate();
@@ -46,7 +46,7 @@ const Checkout = ({ cart, updateCartQuantity, clearCart }) => {
         </div>
         <h2 className="text-3xl font-serif font-bold text-chocolate-950 mb-4">Order Placed!</h2>
         <p className="text-chocolate-600 mb-8">Thank you for your sweet purchase. Your exquisite chocolates will be prepared shortly.</p>
-        <Link to="/" className="btn-primary inline-flex items-center gap-2">
+        <Link to="/shop" className="btn-primary inline-flex items-center gap-2">
           <ArrowLeft className="w-4 h-4" /> Back to Shop
         </Link>
       </div>
@@ -58,7 +58,7 @@ const Checkout = ({ cart, updateCartQuantity, clearCart }) => {
       <div className="max-w-2xl mx-auto text-center py-16">
         <h2 className="text-3xl font-serif font-bold text-chocolate-900 mb-4">Your Cart is Empty</h2>
         <p className="text-chocolate-600 mb-8">Looks like you haven't made your selections yet.</p>
-        <Link to="/" className="btn-primary inline-flex items-center gap-2">
+        <Link to="/shop" className="btn-primary inline-flex items-center gap-2">
           <ArrowLeft className="w-4 h-4" /> Start Shopping
         </Link>
       </div>
@@ -69,7 +69,7 @@ const Checkout = ({ cart, updateCartQuantity, clearCart }) => {
     <div className="max-w-5xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-10">
       <div className="lg:col-span-7">
         <div className="flex items-center gap-4 mb-8">
-          <Link to="/" className="text-chocolate-500 hover:text-chocolate-800 transition-colors p-2 rounded-full hover:bg-chocolate-100"><ArrowLeft className="w-5 h-5"/></Link>
+          <Link to="/shop" className="text-chocolate-500 hover:text-chocolate-800 transition-colors p-2 rounded-full hover:bg-chocolate-100"><ArrowLeft className="w-5 h-5"/></Link>
           <h1 className="text-3xl font-serif font-bold text-chocolate-950">Checkout</h1>
         </div>
 
@@ -105,7 +105,7 @@ const Checkout = ({ cart, updateCartQuantity, clearCart }) => {
             {cart.map((c) => (
               <div key={c.item._id} className="flex gap-4">
                 <div className="w-16 h-16 rounded overflow-hidden flex-shrink-0 bg-chocolate-100 border border-chocolate-100">
-                  <img src={c.item.imageUrl?.startsWith('/') ? `http://localhost:5000${c.item.imageUrl}` : c.item.imageUrl} alt={c.item.name} className="w-full h-full object-cover" />
+                  <img src={c.item.imageUrl?.startsWith('/') ? `${import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000'}${c.item.imageUrl}` : c.item.imageUrl} alt={c.item.name} className="w-full h-full object-cover" />
                 </div>
                 <div className="flex-grow">
                   <h4 className="font-medium text-chocolate-900 line-clamp-1">{c.item.name}</h4>

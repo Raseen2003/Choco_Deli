@@ -3,7 +3,7 @@ import axios from 'axios';
 
 // 1. SET YOUR LOCAL BACKEND URL HERE
 // Replace this with the URL you see at the top of your Render dashboard in production
-axios.defaults.baseURL = 'http://localhost:5000'; 
+axios.defaults.baseURL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000';
 
 const AuthContext = createContext();
 

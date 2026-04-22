@@ -16,12 +16,12 @@ const ProtectedRoute = ({ adminOnly = false }) => {
 
   if (!user) {
     // Not logged in
-    return <Navigate to="/login" replace />;
+    return <Navigate to="/" replace />;
   }
 
   if (adminOnly && user.role !== 'admin') {
     // Logged in but not an admin
-    return <Navigate to="/" replace />;
+    return <Navigate to="/shop" replace />;
   }
 
   // Authorized
